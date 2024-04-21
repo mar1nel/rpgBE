@@ -2,6 +2,9 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
+const profileRoutes = require('./routes/profileRoutes');
+
+
 const mongoURI = 'mongodb://127.0.0.1:27017/rpgLicence';
 const port = 8080; // Backend server port
 
@@ -18,4 +21,4 @@ app.listen(port, () => {
     console.log(`-- Server running on port: ${port}`);
 });
 
-//fake
+app.use('/profiles', profileRoutes);
