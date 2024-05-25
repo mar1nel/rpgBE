@@ -1,7 +1,16 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose, { Schema, Document } from 'mongoose';
 
-const profileSchema = new Schema({
+interface IProfile extends Document {
+    profileNickname: string;
+    passwordHash: string;
+    solanaAddress: string;
+    profileEmail: string;
+    class: string;
+    money: number;
+    profilePicture: string;
+}
+
+const profileSchema: Schema = new Schema({
     profileNickname: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
     solanaAddress: { type: String, required: true, unique: true },
@@ -11,5 +20,6 @@ const profileSchema = new Schema({
     profilePicture: { type: String, required: true }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Profile', profileSchema);
+const Profile = mongoose.model<IProfile>('Profile', profileSchema);
 
+export default Profile;

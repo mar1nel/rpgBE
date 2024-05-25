@@ -1,13 +1,21 @@
 import express, { Request, Response } from 'express';
+import Profile from '../models/Profile';
+
 const router = express.Router();
-const Profile = require('../models/Profile');  // Ensure your model is compatible with TypeScript
 
+// GET all profiles
+router.get('/', async (req: Request, res: Response) => {
+    try {
+        const profiles = await Profile.find({});
+        res.status(200).json(profiles);
+    } catch (error) {
+        console.error('Failed to retrieve profiles:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+// POST create a new profile
 router.post('/', async (req: Request, res: Response) => {
-
-    router.post('/', async (req, res) => {
-        res.status(201).send({ message: 'Profile created' });
-    });
-
     try {
         const newProfile = new Profile(req.body);
         await newProfile.save();
@@ -17,4 +25,4 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-module.exports = router ;
+export default router;
