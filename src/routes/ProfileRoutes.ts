@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import Profile from '../models/Profile';
+import Item from "../models/Item";
 
 const router = express.Router();
 

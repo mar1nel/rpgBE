@@ -19,6 +19,12 @@ mongoose.connect(mongoURI)
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 
 const app = express();
+
+const corsOptions = {
+    origin: 'http://localhost:8080',
+    optionsSuccessStatus: 200
+};
+
 app.use(cors());
 app.use(express.json()); // For parsing application/json
 
