@@ -26,4 +26,21 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
+router.post('/api/profiles', async (req: Request, res: Response) => {
+    try {
+        const { profileNickname, solanaAddress, money } = req.body; // Extract data from request body
+        const profile = new Profile({
+            profileNickname,
+            solanaAddress,
+            // class,
+            money,
+        });
+        await profile.save(); // Save the new profile to MongoDB
+        res.status(201).send(profile);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+
 export default router;

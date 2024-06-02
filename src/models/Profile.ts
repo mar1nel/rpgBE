@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 interface IProfile extends Document {
     profileNickname: string;
-    passwordHash: string;
+    // passwordHash: string;
     solanaAddress: string;
     class: string;
     money: number;
@@ -10,7 +10,7 @@ interface IProfile extends Document {
 
 const profileSchema: Schema = new Schema({
     profileNickname: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
+    // passwordHash: { type: String, required: true },
     solanaAddress: { type: String, required: true, unique: true },
     class: { type: String, required: true },
     money: { type: Number, default: 0 },
