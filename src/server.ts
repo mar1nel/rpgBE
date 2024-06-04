@@ -25,7 +25,7 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3030' }));
 app.use(express.json()); // For parsing application/json
 
 app.use('/profiles', profileRoutes);
@@ -37,6 +37,8 @@ app.use('/dungeons', dungeonRoutes);
 app.use('/dungeon-enemies', dungeonEnemyRoutes);
 app.use('/enemies', enemyRoutes);
 app.use('/fights', fightRoutes);
+app.use('/images', express.static('public/images'));
+
 
 app.get('/api/test', (req: Request, res: Response) => {
     res.json({ message: 'Hello from Express!' });
