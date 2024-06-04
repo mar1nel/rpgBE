@@ -39,6 +39,7 @@ app.use('/enemies', enemyRoutes);
 app.use('/fights', fightRoutes);
 app.use('/images', express.static('public/images'));
 
+
 app.get('/api/test', (req: Request, res: Response) => {
     res.json({ message: 'Hello from Express!' });
 });
