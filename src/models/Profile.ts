@@ -14,6 +14,7 @@ interface IInventoryItem {
     itemId: number;  // Reference to Item.itemId
     quantity: number;
     equipped: boolean;
+    unlocked: boolean;
 }
 
 const profileSchema: Schema = new Schema({
@@ -26,7 +27,8 @@ const profileSchema: Schema = new Schema({
     inventory: [{
         itemId: { type: Number, required: true },
         quantity: { type: Number, required: true },
-        equipped: { type: Boolean, default: false }
+        equipped: { type: Boolean, default: false },
+        unlocked: { type: Boolean, default: false }
     }]
 }, { timestamps: true });
 
