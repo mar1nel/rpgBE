@@ -25,4 +25,19 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
+// GET sigle item by item Id
+router.get('/:itemId', async (req, res) => {
+    try {
+        const item = await Item.findOne({ itemId: req.params.itemId });
+        if (item) {
+            res.status(200).json(item);
+        } else {
+            res.status(404).send('Item not found');
+        }
+    } catch (error) {
+        console.error('Failed to retrieve item:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 export default router;

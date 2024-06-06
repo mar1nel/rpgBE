@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IItem extends Document {
     itemId: number;
     itemName: string;
-    itemType: string;
+    itemType: string; // Helmet, Pants, Body, Weapon
     rarity: 'A' | 'B' | 'C' | 'F';
     price: number;
     sellDuration: number;
