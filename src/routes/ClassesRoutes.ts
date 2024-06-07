@@ -14,7 +14,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 });
 
-// POST create a new class - 4 classes only
+// POST create a new class - 4 classes only #TODO
 router.post('/', async (req: Request, res: Response) => {
     try {
         const newClass = new Classes(req.body);
