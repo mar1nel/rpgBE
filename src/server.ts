@@ -4,7 +4,6 @@ import cors from 'cors';
 import profileRoutes from "./routes/ProfileRoutes";
 import itemRoutes from "./routes/ItemRoutes";
 import classesRoutes from "./routes/ClassesRoutes";
-import heroRoutes from "./routes/HeroRoutes";
 import heroEquipmentRoutes from "./routes/HeroEquipmentRoutes";
 import dungeonRoutes from "./routes/DungeonRoutes";
 import dungeonEnemyRoutes from "./routes/DungeonEnemyRoutes";
@@ -31,7 +30,6 @@ app.use(express.json()); // For parsing application/json
 app.use('/profiles', profileRoutes);
 app.use('/items', itemRoutes);
 app.use('/classes', classesRoutes);
-app.use('/heroes', heroRoutes);
 app.use('/hero-equipment', heroEquipmentRoutes);
 app.use('/dungeons', dungeonRoutes);
 app.use('/dungeon-enemies', dungeonEnemyRoutes);

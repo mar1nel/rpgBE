@@ -82,4 +82,33 @@ router.get('/login/:solanaAddress', async (req, res) => {
     }
 });
 
+
+router.post('/giveItem', async (req: Request, res: Response) => {
+    try {
+        const { userId, itemId } = req.body;
+        const profile = await Profile.findById(userId);
+
+        if (!profile) {
+            return res.status(404).json({ success: false, message: 'Profile not found' });
+        }
+
+        const availableSlot = profile.inventory.find(slot => !slot.equipped && slot.unlocked && slot.itemId === 0);
+
+        if (!availableSlot) {
+            return res.status(400).json({ success: false, message: 'No available slot to receive item' });
+        }
+
+        availableSlot.itemId = itemId;
+        availableSlot.quantity = 1;
+
+        await profile.save();
+
+        res.status(200).json({ success: true, updatedUser: profile });
+    } catch (error) {
+        console.error('Error giving item:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+
 export default router;

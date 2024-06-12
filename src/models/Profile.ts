@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IProfile extends Document {
+    _id: string;
     profileNickname: string;
     solanaAddress: string;
     profileClass: number;
