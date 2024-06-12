@@ -18,7 +18,26 @@ router.get('/', async (req: Request, res: Response) => {
 // POST create a new profile
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const newProfile = new Profile(req.body);
+        const { profileNickname, solanaAddress, profileClass, money, level, healthPoints } = req.body;
+
+        // Initialize the inventory with 24 slots
+        const initialInventory = Array(24).fill(null).map((_, index) => ({
+            itemId: 0,  // No Item
+            quantity: 0,
+            equipped: false,
+            unlocked: index < 16  // First 16 slots are unlocked
+        }));
+
+        const newProfile = new Profile({
+            profileNickname,
+            solanaAddress,
+            profileClass,
+            money: 100,
+            level: 0,
+            healthPoints: 100,
+            inventory: initialInventory
+        });
+
         await newProfile.save();
         res.status(201).send(newProfile);
     } catch (error: any) {
@@ -44,5 +63,23 @@ router.post('/api/profiles', async (req: Request, res: Response) => {
     }
 });
 
+
+router.get('/login/:solanaAddress', async (req, res) => {
+    console.log("Requested solanaAddress:", req.params.solanaAddress);  // Debugging output
+
+    try {
+        const profile = await Profile.findOne({ solanaAddress: req.params.solanaAddress.trim() });
+        if (profile) {
+            console.log("Profile found:", profile);
+            res.json(profile);
+        } else {
+            console.log("No profile found for:", req.params.solanaAddress);
+            res.status(404).send('Profile not found');
+        }
+    } catch (error) {
+        console.error('Error logging in:', error);
+        res.status(500).send('Server error');
+    }
+});
 
 export default router;

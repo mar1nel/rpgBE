@@ -7,14 +7,14 @@ interface IProfile extends Document {
     money: number;
     level: number;
     healthPoints: number;
-    inventory: IInventoryItem[];
+    inventory: IInventorySlot[];
 }
 
-interface IInventoryItem {
+interface IInventorySlot {
     itemId: number;  // Reference to Item.itemId
     quantity: number;
     equipped: boolean;
-    unlocked: boolean;
+    unlocked: boolean; // This refers to the slot
 }
 
 const profileSchema: Schema = new Schema({
