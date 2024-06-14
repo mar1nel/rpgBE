@@ -45,25 +45,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/api/profiles', async (req: Request, res: Response) => {
-    try {
-        const { profileNickname, solanaAddress, profileClass, money, level, healthPoints } = req.body; // Extract data from request body
-        const profile = new Profile({
-            profileNickname,
-            solanaAddress,
-            profileClass,
-            money,
-            level,
-            healthPoints
-        });
-        await profile.save(); // Save the new profile to MongoDB
-        res.status(201).send(profile);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-});
-
-
+// Login route
 router.get('/login/:solanaAddress', async (req, res) => {
     console.log("Requested solanaAddress:", req.params.solanaAddress);  // Debugging output
 
@@ -82,7 +64,7 @@ router.get('/login/:solanaAddress', async (req, res) => {
     }
 });
 
-
+// Give item to a user
 router.post('/giveItem', async (req: Request, res: Response) => {
     try {
         const { userId, itemId } = req.body;
@@ -107,6 +89,44 @@ router.post('/giveItem', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error giving item:', error);
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Sell an item
+router.post('/sell-item', async (req, res) => {
+    const { userId, itemId, slotIndex } = req.body;
+
+    try {
+        const user = await Profile.findById(userId);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const slot = user.inventory[slotIndex];
+        if (!slot || slot.itemId !== itemId || slot.quantity === 0) {
+            return res.status(404).send('Item not found in the specified slot');
+        }
+
+        if (slot.quantity > 1) {
+            slot.quantity -= 1;
+        } else {
+            slot.itemId = 0;
+            slot.quantity = 0;
+        }
+
+        const itemDetails = await Item.findOne({ itemId });
+        if (!itemDetails) {
+            return res.status(404).send('Item details not found');
+        }
+
+        user.money += itemDetails.price;
+
+        await user.save();
+
+        res.status(200).json({ user, itemDetails });
+    } catch (error) {
+        console.error('Failed to sell item:', error);
+        res.status(500).send('Server error');
     }
 });
 
