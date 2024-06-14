@@ -3,6 +3,18 @@ import Enemy from '../models/Enemy';
 
 const router = express.Router();
 
+// Create a new enemy
+router.post('/', async (req: Request, res: Response) => {
+    try {
+        const newEnemy = new Enemy(req.body);
+        await newEnemy.save();
+        res.status(201).send(newEnemy);
+    } catch (error) {
+        console.error('Failed to create enemy:', error);
+        res.status(400).send('Error creating enemy');
+    }
+});
+
 // Fetch enemies by dungeon level
 router.get('/level/:dungeonLevel', async (req: Request, res: Response) => {
     const { dungeonLevel } = req.params;

@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import Enemy from '../models/Enemy';
 import Profile from '../models/Profile';
+import DungeonEnemy from "../models/DungeonEnemy";
 
 const router = express.Router();
 
@@ -60,6 +61,29 @@ router.post('/fight', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Failed to fight enemy:', error);
         res.status(500).json({ success: false, message: 'Failed to fight enemy' });
+    }
+});
+
+// POST create a new dungeon enemy
+router.post('/', async (req: Request, res: Response) => {
+    try {
+        const newDungeonEnemy = new DungeonEnemy(req.body);
+        await newDungeonEnemy.save();
+        res.status(201).send(newDungeonEnemy);
+    } catch (error: any) {
+        console.error('Failed to create dungeon enemy:', error);
+        res.status(400).send(error.message);
+    }
+});
+
+// GET all dungeon enemies
+router.get('/', async (req: Request, res: Response) => {
+    try {
+        const dungeonEnemies = await DungeonEnemy.find({});
+        res.status(200).json(dungeonEnemies);
+    } catch (error) {
+        console.error('Failed to retrieve dungeon enemies:', error);
+        res.status(500).send('Server error');
     }
 });
 
