@@ -1,27 +1,65 @@
 import express, { Request, Response } from 'express';
-import Dungeon from '../models/Dungeon';
+import Enemy from '../models/Enemy';
+import Profile from '../models/Profile';
 
 const router = express.Router();
 
-// GET all dungeons
-router.get('/', async (req: Request, res: Response) => {
+router.get('/dungeons/:level/enemies', async (req: Request, res: Response) => {
+    const { level } = req.params;
+
     try {
-        const dungeons = await Dungeon.find({});
-        res.status(200).json(dungeons);
+        const enemies = await Enemy.find({ enemyLevel: level });
+        res.status(200).json({ success: true, enemies });
     } catch (error) {
-        console.error('Failed to retrieve dungeons:', error);
-        res.status(500).send('Server error');
+        console.error('Failed to fetch enemies:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch enemies' });
     }
 });
 
-// POST create a new dungeon
-router.post('/', async (req: Request, res: Response) => {
+router.post('/fight', async (req: Request, res: Response) => {
+    const { userId, enemyId } = req.body;
+
     try {
-        const newDungeon = new Dungeon(req.body);
-        await newDungeon.save();
-        res.status(201).send(newDungeon);
-    } catch (error: any) {
-        res.status(400).send(error.message);
+        const user = await Profile.findById(userId);
+        const enemy = await Enemy.findById(enemyId);
+
+        if (!user || !enemy) {
+            return res.status(404).json({ success: false, message: 'User or Enemy not found' });
+        }
+
+        if (user.money < enemy.enemyCost) {
+            return res.status(400).json({ success: false, message: 'Not enough money to fight this enemy' });
+        }
+
+        user.money -= enemy.enemyCost;
+
+        const moneyReward = enemy.baseMoneyReward;
+        const expReward = enemy.baseExpReward;
+
+        // Cast lootDropReward to expected type
+        const lootDropReward = enemy.lootDropReward as unknown as { itemId: number, quantity: number };
+
+        // Check for empty inventory slots and add loot
+        for (let i = 0; i < user.inventory.length; i++) {
+            if (user.inventory[i].unlocked && user.inventory[i].itemId === 0) {
+                user.inventory[i].itemId = lootDropReward.itemId;
+                user.inventory[i].quantity += lootDropReward.quantity;
+                break;
+            }
+        }
+
+        user.money += moneyReward;
+        user.level += expReward; // Adjust as per your leveling logic
+
+        // Level up dungeon based on experience gained
+        user.dungeonLevel = Math.floor(user.level / 10) + 1;
+
+        await user.save();
+
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        console.error('Failed to fight enemy:', error);
+        res.status(500).json({ success: false, message: 'Failed to fight enemy' });
     }
 });
 

@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import profileRoutes from "./routes/ProfileRoutes";
-import itemRoutes from "./routes/ItemRoutes";
-import classesRoutes from "./routes/ClassesRoutes";
 import heroEquipmentRoutes from "./routes/HeroEquipmentRoutes";
-import dungeonRoutes from "./routes/DungeonRoutes";
 import dungeonEnemyRoutes from "./routes/DungeonEnemyRoutes";
+import profileRoutes from "./routes/ProfileRoutes";
+import classesRoutes from "./routes/ClassesRoutes";
+import dungeonRoutes from "./routes/DungeonRoutes";
 import enemyRoutes from "./routes/EnemyRoutes";
 import fightRoutes from "./routes/FightRoutes";
+import itemRoutes from "./routes/ItemRoutes";
 
 const mongoURI = 'mongodb://127.0.0.1:27017/rpgLicence';
 const port = 8080; // Backend server port
@@ -25,7 +25,7 @@ const corsOptions = {
 };
 
 app.use(cors({ origin: 'http://localhost:3030' }));
-app.use(express.json()); // For parsing application/json
+app.use(express.json());
 
 app.use('/profiles', profileRoutes);
 app.use('/items', itemRoutes);

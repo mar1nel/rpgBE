@@ -3,25 +3,19 @@ import Enemy from '../models/Enemy';
 
 const router = express.Router();
 
-// GET all enemies
-router.get('/', async (req: Request, res: Response) => {
-    try {
-        const enemies = await Enemy.find({});
-        res.status(200).json(enemies);
-    } catch (error) {
-        console.error('Failed to retrieve enemies:', error);
-        res.status(500).send('Server error');
-    }
-});
+// Fetch enemies by dungeon level
+router.get('/level/:dungeonLevel', async (req: Request, res: Response) => {
+    const { dungeonLevel } = req.params;
 
-// POST create a new enemy
-router.post('/', async (req: Request, res: Response) => {
     try {
-        const newEnemy = new Enemy(req.body);
-        await newEnemy.save();
-        res.status(201).send(newEnemy);
-    } catch (error: any) {
-        res.status(400).send(error.message);
+        const enemies = await Enemy.find({ enemyLevel: Number(dungeonLevel) });
+        if (enemies.length === 0) {
+            return res.status(404).json({ message: 'No enemies found for this dungeon level.' });
+        }
+        res.json({ enemies });
+    } catch (error) {
+        console.error('Failed to fetch enemies:', error);
+        res.status(500).send('Server error');
     }
 });
 

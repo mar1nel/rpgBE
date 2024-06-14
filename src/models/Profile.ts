@@ -1,30 +1,31 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IProfile extends Document {
-    _id: string;
     profileNickname: string;
     solanaAddress: string;
     profileClass: number;
     money: number;
     level: number;
     healthPoints: number;
-    inventory: IInventorySlot[];
-}
-
-interface IInventorySlot {
-    itemId: number;  // Reference to Item.itemId
-    quantity: number;
-    equipped: boolean;
-    unlocked: boolean; // This refers to the slot
+    experiencePoints: number;
+    dungeonLevel: number;
+    inventory: {
+        itemId: number;
+        quantity: number;
+        equipped: boolean;
+        unlocked: boolean;
+    }[];
 }
 
 const profileSchema: Schema = new Schema({
     profileNickname: { type: String, required: true, unique: true },
     solanaAddress: { type: String, required: true, unique: true },
-    profileClass: { type: Number, required: true },  // Adjusted to Number if matching itemId
+    profileClass: { type: Number, required: true },
     money: { type: Number, default: 100 },
     level: { type: Number, default: 0 },
     healthPoints: { type: Number, default: 100 },
+    experiencePoints: { type: Number, default: 0 },
+    dungeonLevel: { type: Number, default: 1 },
     inventory: [{
         itemId: { type: Number, required: true },
         quantity: { type: Number, required: true },
