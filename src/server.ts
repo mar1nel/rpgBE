@@ -19,18 +19,13 @@ mongoose.connect(mongoURI)
 
 const app = express();
 
-const corsOptions = {
-    origin: 'http://localhost:8080',
-    optionsSuccessStatus: 200
-};
-
 app.use(cors({ origin: 'http://localhost:3030' }));
 app.use(express.json());
 
 app.use('/profiles', profileRoutes);
 app.use('/items', itemRoutes);
 app.use('/classes', classesRoutes);
-app.use('/hero-equipment', heroEquipmentRoutes);
+app.use('/heroequipment', heroEquipmentRoutes); // Ensure the route path matches the frontend request
 app.use('/dungeons', dungeonRoutes);
 app.use('/dungeon-enemies', dungeonEnemyRoutes);
 app.use('/enemies', enemyRoutes);
