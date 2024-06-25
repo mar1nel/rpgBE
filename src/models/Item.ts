@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IItem extends Document {
+export interface IItem extends Document {
     itemId: number;
     itemName: string;
     itemType: string; // Helmet, Pants, Body, Weapon
@@ -22,27 +22,9 @@ const itemSchema: Schema = new Schema({
     sellDuration: { type: Number, required: true },
     bonusStats: { type: mongoose.Schema.Types.Mixed },
     stackable: { type: Boolean, default: false },
-    quantity: { type: Number, default: 1 }, //Numarul de obiecte intr-un stack
+    quantity: { type: Number, default: 1 }, // Number of items in a stack
     imageUrl: { type: String, required: true }
 });
-
-// Ensure these interfaces include the 'type' property
-export interface IInventorySlot {
-    itemId: number;
-    quantity: number;
-    equipped: boolean;
-    unlocked: boolean;
-    type: 'armor' | 'helmet' | 'weapon' | 'ring' | 'pants'; // Add this line
-}
-
-export interface ItemDetails {
-    itemId: number;
-    name: string;
-    description: string;
-    imageUrl: string;
-    type: 'armor' | 'helmet' | 'weapon' | 'ring' | 'pants'; // Add this line if needed
-}
-
 
 const Item = mongoose.model<IItem>('Item', itemSchema);
 
